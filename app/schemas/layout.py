@@ -48,3 +48,11 @@ class LayoutPreviewRequest(BaseModel):
 
 class LayoutPreviewResponse(BaseModel):
     zpl: str
+
+class LayoutDetailResponse(BaseModel):
+    id: int
+    name: str
+    description: str | None
+    fields: list[str]
+    active: bool
+    created_at: datetime

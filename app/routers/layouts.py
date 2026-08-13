@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.models.layout import Layout
-from app.schemas.layout import LayoutCreate, LayoutResponse,LayoutPreviewResponse, LayoutPreviewRequest
+from app.schemas.layout import LayoutCreate, LayoutResponse,LayoutPreviewResponse, LayoutPreviewRequest, LayoutDetailResponse
 from app.services.zpl import extract_fields, render_zpl
 
 
@@ -45,4 +45,19 @@ async def preview_layout(layout_id: int, preview_data: LayoutPreviewRequest, db:
 
     return {
         "zpl": zpl
+    }
+
+@router.get('/layouts/{layout_id}', response_model=LayoutDetailResponse, status_code=status.HTTP_200_OK)
+async def get_layout(layout_id: int, db: Session = Depends(get_db)):
+    layout = db.query(Layout).filter(Layout.id == layout_id).first()
+    if not layout:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Layout não encontrado")
+    fields = extract_fields(layout.zpl_template)
+    return{
+        "id": layout.id,
+        "name": layout.name,
+        "description": layout.description,
+        "fields": fields,
+        "active": layout.active,
+        "created_at": layout.created_at
     }
