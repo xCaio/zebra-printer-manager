@@ -24,4 +24,7 @@ class PrinterResponse(BaseModel):
     active: bool
     created_at: datetime
 
+class PrinterStatusUpdate(BaseModel):
+    active: bool
+
     model_config = ConfigDict(from_attributes=True)
