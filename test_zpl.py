@@ -1,0 +1,38 @@
+from app.services.zpl import extract_fields, render_zpl
+
+
+template = """
+^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR6,6~SD10^JUS^LRN^CI0^XZ
+^XA
+^MMT
+^PW799
+^LL0559
+^LS0
+^FO576,32^GFA,03200,03200,00020,:Z64:
+eJztljFr20AUgN9JETKusdzBJINBwl1KMySjKCVWaLrnBzQk9Bd4yRawkIaaFqK/EJKlpH8gNJDIZOjaoZmj2otHDR0OR9X1TpHle5cOgS4t5Abfcff54727d2cDPLjpDLecz5E/zD2Eyx59iLvevefLhx/ucTGArfqOzmBN4TJyUI4WPmrx7yhcvPu9FC58Y3asQQ9z5CcfmtgXTfnQQlxmxt58OOfyjZDOh3MufWWK9YHso3SNc4C5/g5PuAiw8o3HeaDdBVhxo1EKJVf5rsLpWRlgxb0P44MykcoXRSd8vYY40yziMyVf3mxauQ+aLnFZo2OLEyGSL29u9NhMQ1zeWOHhAiGyr+ZeMub7oezrtAbiiJHPdfln4pzIXGudc4kn++iKU3Ax4vY4l4In+WZuV3w64/vc+qbkywofdRLEiSOjLQ/F5/Dc6LrM0RYUc7KP1grO+SH7oGWLQ96UfXVRzPTdBHHiKNLNEdq/Gu+S5ErmlkQXj0ayT9M0xiYTef8Y79u8aELJx3yxFoaRwgEzTFQvQQBabkWoXkQNpLYp14uYg6OLpsoBHHRQPSd8sEpfonoW1byc9vH9ELH4U3Q/hOQXSZjs44v6zJogjidCwH7NZJ9IGC4izIlEMhP5RICXtIe5lPffBthHRXwMc9ySGgz7+PNyrL5XIuMBwz6WH31kKseub5jquy2XkG9gLuZKjg5Chdva2jZg6+0byccfF1cLnBfonpe/f+j+1k/hk1aHzzJn30BfN4tMKl/vFKhmoXctswH6Jn7/cjvgHCicAX0DWtgX+TPdShFnENgmxnZb9vE3DXx/+ETOF7wOib2G/L6wL+eX57e3F+do/9r7+/ttG+/f0H0+Vd57cUH27uYW5xFo3W63hzmiQ99TfIE+3AsU7itZ8rxl5XyfHTrOqnK+TxvlcOHL3cNaXVe4nZslQ/VV7X/6f/Cv+h7bY/ur9huQ7HIo:B38F
+^FT74,101^A0N,30,28^FH\^FD{{codigo}}^FS
+^FT66,224^A0N,29,28^FH\^FDPRODUTO: {{nome_produto}}^FS
+^FO42,34^GB698,482,11^FS
+^FO49,152^GB683,0,21^FS
+^BY3,3,100^FT176,412^BCN,,Y,N
+^FD>:{{codigo}}^FS
+^PQ1,0,1,Y^XZ
+"""
+
+
+fields = extract_fields(template)
+
+print("Campos encontrados:")
+print(fields)
+
+
+data = {
+    "codigo": "PA3296",
+    "nome_produto": "ETIQUETA TERMICA"
+}
+
+
+zpl = render_zpl(template, data)
+
+print("\nZPL final:")
+print(zpl)
