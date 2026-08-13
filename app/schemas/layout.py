@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -17,17 +18,14 @@ class LayoutUpdate(BaseModel):
         min_length=1,
         max_length=100
     )
-
     description: str | None = Field(
         default=None,
         max_length=200
     )
-
     zpl_template: str | None = Field(
         default=None,
         min_length=1
     )
-
     active: bool | None = None
 
 
@@ -42,3 +40,11 @@ class LayoutResponse(BaseModel):
     model_config = ConfigDict(
         from_attributes=True
     )
+
+
+class LayoutPreviewRequest(BaseModel):
+    data: dict[str, str | int | float | bool]
+
+
+class LayoutPreviewResponse(BaseModel):
+    zpl: str

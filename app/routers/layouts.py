@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.models.layout import Layout
-from app.schemas.layout import LayoutCreate, LayoutResponse
+from app.schemas.layout import LayoutCreate, LayoutResponse,LayoutPreviewResponse, LayoutPreviewRequest
+from app.services.zpl import extract_fields, render_zpl
 
 
 router = APIRouter(
@@ -31,3 +32,17 @@ async def create_layout(
     db.refresh(layout)
 
     return layout
+
+@router.post("/{layout_id}/preview", response_model=LayoutPreviewResponse, status_code=status.HTTP_200_OK)
+async def preview_layout(layout_id: int, preview_data: LayoutPreviewRequest, db: Session = Depends(get_db)):
+    layout = db.query(Layout).filter(Layout.id == layout_id).first()
+    if not layout:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Layout não encontrado")
+    try:
+        zpl = render_zpl(layout.zpl_template, preview_data.data)
+    except ValueError as error:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error))
+
+    return {
+        "zpl": zpl
+    }
