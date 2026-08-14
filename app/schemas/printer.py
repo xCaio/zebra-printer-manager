@@ -24,6 +24,12 @@ class PrinterResponse(BaseModel):
     active: bool
     created_at: datetime
 
+class PrinterTestResponse(BaseModel):
+    success: bool
+    message: str
+    printer: str
+
+
 class PrinterStatusUpdate(BaseModel):
     active: bool
 
