@@ -7,11 +7,16 @@ def extract_fields(zpl_template: str) -> list[str]:
     return list(dict.fromkeys(fields))
 
 
-def render_zpl(zpl_template: str, data: dict) -> str:
+def render_zpl(
+    zpl_template: str,
+    data: dict[str, str | int | float | bool]
+) -> str:
+
     fields = extract_fields(zpl_template)
 
     missing_fields = [
-        field for field in fields
+        field
+        for field in fields
         if field not in data
     ]
 
@@ -21,7 +26,8 @@ def render_zpl(zpl_template: str, data: dict) -> str:
         )
 
     unknown_fields = [
-        field for field in data
+        field
+        for field in data
         if field not in fields
     ]
 
@@ -34,6 +40,7 @@ def render_zpl(zpl_template: str, data: dict) -> str:
 
     for field, value in data.items():
         placeholder = f"{{{{{field}}}}}"
+
         zpl = zpl.replace(
             placeholder,
             str(value)
