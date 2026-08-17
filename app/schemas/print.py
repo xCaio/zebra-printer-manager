@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 class PrintRequest(BaseModel):
     printer_id: int = Field(gt=0)
     layout_id: int = Field(gt=0)
+    quantity: int = Field(default=1, ge=1)
     data: dict[str, str | int | float | bool]
 
 

@@ -12,15 +12,8 @@ router = APIRouter(
     tags=["layouts"]
 )
 
-@router.post(
-    "/",
-    response_model=LayoutResponse,
-    status_code=status.HTTP_201_CREATED
-)
-async def create_layout(
-    layout_data: LayoutCreate,
-    db: Session = Depends(get_db)
-):
+@router.post("/", response_model=LayoutResponse, status_code=status.HTTP_201_CREATED)
+async def create_layout(layout_data: LayoutCreate, db: Session = Depends(get_db)):
     layout = Layout(
         name=layout_data.name,
         description=layout_data.description,
@@ -47,7 +40,7 @@ async def preview_layout(layout_id: int, preview_data: LayoutPreviewRequest, db:
         "zpl": zpl
     }
 
-@router.get('/layouts/{layout_id}', response_model=LayoutDetailResponse, status_code=status.HTTP_200_OK)
+@router.get('/{layout_id}', response_model=LayoutDetailResponse, status_code=status.HTTP_200_OK)
 async def get_layout(layout_id: int, db: Session = Depends(get_db)):
     layout = db.query(Layout).filter(Layout.id == layout_id).first()
     if not layout:

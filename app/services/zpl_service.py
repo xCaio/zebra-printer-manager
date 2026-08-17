@@ -3,7 +3,6 @@ import re
 
 def extract_fields(zpl_template: str) -> list[str]:
     fields = re.findall(r"{{(.*?)}}", zpl_template)
-
     return list(dict.fromkeys(fields))
 
 
