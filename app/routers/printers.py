@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.models.printer import Printer
 from app.schemas.printer import PrinterCreate, PrinterResponse, PrinterUpdate, PrinterStatusUpdate, PrinterTestResponse
+from app.schemas.printer_status import PrinterStatusResponse
 from app.services.printer import PrinterService
 
 router = APIRouter(prefix='/printers', tags=["Printers"])
@@ -85,3 +86,37 @@ async def test_printer(printer_id: int, db: Session = Depends(get_db)):
         message="Teste de impressão enviado com sucesso.",
         printer=printer.name
     )
+
+@router.get(
+    "/{printer_id}/status",
+    response_model=PrinterStatusResponse,
+    status_code=status.HTTP_200_OK
+)
+async def get_printer_status(
+    printer_id: int,
+    db: Session = Depends(get_db)
+):
+    printer = (
+        db.query(Printer)
+        .filter(Printer.id == printer_id)
+        .first()
+    )
+
+    if not printer:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Impressora não encontrada"
+        )
+
+    online = PrinterService.check_status(
+        ip=printer.ip,
+        port=printer.port
+    )
+
+    return {
+        "printer_id": printer.id,
+        "name": printer.name,
+        "ip": printer.ip,
+        "port": printer.port,
+        "online": online
+    }

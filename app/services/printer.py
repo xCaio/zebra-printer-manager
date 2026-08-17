@@ -47,3 +47,27 @@ class PrinterService:
             port=port,
             zpl=zpl
         )
+
+    @staticmethod
+    def check_status(
+        ip: str,
+        port: int,
+        timeout: int = 2
+    ) -> bool:
+        try:
+            with socket.socket(
+                socket.AF_INET,
+                socket.SOCK_STREAM
+            ) as printer_socket:
+
+                printer_socket.settimeout(timeout)
+                printer_socket.connect((ip, port))
+
+                return True
+
+        except (
+            socket.timeout,
+            ConnectionRefusedError,
+            OSError
+        ):
+            return False
