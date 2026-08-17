@@ -7,3 +7,7 @@ class PrinterStatusResponse(BaseModel):
     ip: str
     port: int
     online: bool
+
+class PrinterStatusListResponse(BaseModel):
+    printers: list[PrinterStatusResponse]
+    total: int

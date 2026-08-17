@@ -1,4 +1,5 @@
 import socket
+from concurrent.futures import ThreadPoolExecutor
 
 class PrinterService:
     @staticmethod
@@ -71,3 +72,31 @@ class PrinterService:
             OSError
         ):
             return False
+
+    @staticmethod
+    def check_multiple_status(
+        printers: list
+    ) -> list:
+        def check(printer):
+            online = PrinterService.check_status(
+                ip=printer.ip,
+                port=printer.port
+            )
+
+            return {
+                "printer_id": printer.id,
+                "name": printer.name,
+                "ip": printer.ip,
+                "port": printer.port,
+                "online": online
+            }
+
+        with ThreadPoolExecutor(
+            max_workers=10
+        ) as executor:
+
+            results = list(
+                executor.map(check, printers)
+            )
+
+        return results
